@@ -1,25 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+import React,{useEffect} from 'react';
+import {Route,Routes,BrowserRouter as Router} from "react-router-dom"
+import Home from './pages/Home';
+import SignUp from './pages/Signup';
+import SignIn from './pages/Signin';
+import axios from 'axios';
 
-function App() {
+const App = () => {
+
+  
+
+  async function getprofiledata(){
+    try {
+      const mydata=await axios.get("/api/user/me");
+    console.log(mydata)
+    } catch (error) {
+      console.log(error.response.data.message)
+    }
+    
+  };
+
+  async function getgoogleprofiledata(){
+    try {
+      const googledata=await axios.get('/api/google/profile');
+      console.log(googledata.data);
+      
+    } catch (error) {
+      console.log(error.response.data.message);
+      
+    }
+  }
+
+  useEffect(()=>{
+    getprofiledata();
+    getgoogleprofiledata()
+
+  },[])
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    <Router>
+
+      <Routes>
+        <Route path='/' element={<Home/>}/>
+        <Route path='/signup' element={<SignUp/>}/>
+        <Route path='/signin' element={<SignIn/>}/>
+      </Routes>
+    </Router>
+  )
 }
 
-export default App;
+export default App
